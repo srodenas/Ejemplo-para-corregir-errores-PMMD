@@ -1,4 +1,4 @@
-package com.example.srodenas.example_with_catalogs.ui.views.activities.fragments.dialogs
+package com.example.srodenas.example_with_catalogs.ui.views.fragments.users.dialogs
 
 import android.app.AlertDialog
 import android.app.Dialog

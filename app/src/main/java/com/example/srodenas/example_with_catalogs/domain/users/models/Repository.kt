@@ -2,6 +2,7 @@ package com.example.srodenas.example_with_catalogs.domain.users.models
 
 import com.example.srodenas.example_with_catalogs.data.users.database.dao.UserDao
 import com.example.srodenas.example_with_catalogs.data.users.database.entities.UserEntity
+import com.example.srodenas.example_with_catalogs.domain.UserDataBaseSingleton
 
 
 class Repository  private constructor(private val userDao : UserDao){
