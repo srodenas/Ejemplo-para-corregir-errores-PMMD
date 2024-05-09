@@ -9,7 +9,7 @@ import androidx.activity.viewModels
 import com.example.srodenas.example_with_catalogs.databinding.ActivityLoginBinding
 import com.example.srodenas.example_with_catalogs.domain.users.models.User
 import com.example.srodenas.example_with_catalogs.ui.viewmodel.users.UserViewModel
-import com.example.srodenas.example_with_catalogs.ui.views.activities.fragments.dialogs.DialogRegisterUser
+import com.example.srodenas.example_with_catalogs.ui.views.fragments.users.dialogs.DialogRegisterUser
 
 
 class LoginActivity : AppCompatActivity() {
