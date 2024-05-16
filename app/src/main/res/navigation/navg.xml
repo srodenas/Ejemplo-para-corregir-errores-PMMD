@@ -9,7 +9,11 @@
         android:id="@+id/alertsFragment"
         android:name="com.example.srodenas.example_with_catalogs.ui.views.fragments.alerts.AlertsFragment"
         android:label="fragment_alerts"
-        tools:layout="@layout/fragment_alerts" />
+        tools:layout="@layout/fragment_alerts" >
+        <action
+            android:id="@+id/action_alertsFragment_to_detailsAlertFragment"
+            app:destination="@id/detailsAlertFragment" />
+    </fragment>
     <fragment
         android:id="@+id/usersFragment"
         android:name="com.example.srodenas.example_with_catalogs.ui.views.fragments.users.UsersFragment"
@@ -20,4 +24,13 @@
         android:name="com.example.srodenas.example_with_catalogs.ui.views.fragments.profile.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/detailsAlertFragment"
+        android:name="com.example.srodenas.example_with_catalogs.ui.views.fragments.alerts.DetailsAlertFragment"
+        android:label="fragment_details_alert"
+        tools:layout="@layout/fragment_details_alert" >
+        <argument
+            android:name="num"
+            app:argType="integer" />
+    </fragment>
 </navigation>

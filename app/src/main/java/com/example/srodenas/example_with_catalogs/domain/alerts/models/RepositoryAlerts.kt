@@ -64,4 +64,6 @@ class RepositoryAlerts private constructor(private val alertDao : AlertDao){
         )
     }
 
+    fun devAlertForPos(pos : Int) = ListAlerts.list.alerts.get(pos)
+
 }

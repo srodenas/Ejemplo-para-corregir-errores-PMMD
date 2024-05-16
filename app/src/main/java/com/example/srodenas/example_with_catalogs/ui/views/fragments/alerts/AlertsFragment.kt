@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.example.srodenas.example_with_catalogs.R
@@ -67,7 +68,8 @@ class AlertsFragment : Fragment() {
 
     //Muestra los detalles de la Alerta
     private fun detailsAlert(pos:Int){
-
+        val navController = this.findNavController()
+        navController.navigate(AlertsFragmentDirections.actionAlertsFragmentToDetailsAlertFragment(num = pos))
     }
 
     //Método que es llamada para crear la vista del fragmento.
@@ -126,6 +128,11 @@ class AlertsFragment : Fragment() {
     Método que gestiona todos los cambios, tanto al añadir, mostrar como eliminar cualquier modelo.
      */
     private fun setObserverChangeViewModel() {
+
+        viewModelAlerts.listAlertsLiveData.observe(viewLifecycleOwner,{
+            listAlert->
+                adapterAlerts.notifyDataSetChanged()   //Debemos notificar al adaptador del cambio en la ui
+        })
         viewModelAlerts.posNewAlertLiveDate.observe(viewLifecycleOwner,{
             posNewAlert ->
                 adapterAlerts.notifyItemInserted(posNewAlert)

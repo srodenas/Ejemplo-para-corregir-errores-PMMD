@@ -8,6 +8,7 @@ import com.example.srodenas.example_with_catalogs.domain.alerts.models.Alert
 import com.example.srodenas.example_with_catalogs.domain.alerts.models.ListAlerts
 import com.example.srodenas.example_with_catalogs.domain.alerts.models.RepositoryAlerts
 import com.example.srodenas.example_with_catalogs.domain.alerts.usecase.UseCaseAddAlert
+import com.example.srodenas.example_with_catalogs.domain.alerts.usecase.UseCaseForPosition
 import com.example.srodenas.example_with_catalogs.domain.alerts.usecase.UseCaseShowAlerts
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -19,7 +20,8 @@ class AlertsViewModel : ViewModel() {
     var listAlertsLiveData = MutableLiveData<List<Alert>>()  //Será mi lista de alertas.
 
     private val useCaseShowAlerts = UseCaseShowAlerts(RepositoryAlerts.repo)
-    private val useCaseAddAlert = UseCaseAddAlert(RepositoryAlerts.repo) //
+    private val useCaseAddAlert = UseCaseAddAlert(RepositoryAlerts.repo)
+    private val useCaseForPosition = UseCaseForPosition(RepositoryAlerts.repo)
     /*private val _text = MutableLiveData<String>().apply {
         value = "Alertas"
     }
@@ -52,17 +54,14 @@ class AlertsViewModel : ViewModel() {
 
     }
 
-    fun showUpdateAlerts(){
-        viewModelScope.launch(Dispatchers.IO) {
-            withContext(Dispatchers.Main) {
-
-            }
-        }
-    }
-
 
     fun delAlert(pos: Int){
 
     }
+
+
+
+    //Devuelve la alerta en posición de la lista en memoria.
+    fun getAlertForPosition(pos: Int) : Alert = useCaseForPosition.devAlert(pos)
 
 }
