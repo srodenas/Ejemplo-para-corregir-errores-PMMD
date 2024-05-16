@@ -7,11 +7,22 @@
 
 
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/text_alerts"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/my_recycler_view_alerts"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content"
+        android:padding="25dp"
+
+
+        />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="right"
+        android:src="@drawable/baseline_person_add_24"
+
+        />
 
 </FrameLayout>

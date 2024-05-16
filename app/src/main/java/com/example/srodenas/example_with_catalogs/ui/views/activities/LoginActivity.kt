@@ -1,11 +1,13 @@
 package com.example.srodenas.example_with_catalogs.ui.views.activities
 
+import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import com.example.srodenas.example_with_catalogs.R
 import com.example.srodenas.example_with_catalogs.databinding.ActivityLoginBinding
 import com.example.srodenas.example_with_catalogs.domain.users.models.User
 import com.example.srodenas.example_with_catalogs.ui.viewmodel.users.UserViewModel
@@ -21,14 +23,15 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         registerLiveData()
         initEvent()
+        userViewModel.setContext(this)  //Pasamos el contexto del Activity al ViewModel. No es buena práctica del todo.
 
     }
 
     private fun initEvent() {
         binding.btnLogin.setOnClickListener{
             userViewModel.isLogin(binding.txtEmail.text.toString(), binding.txtPassword.text.toString())
-
         }
+
         binding.btnRegistro.setOnClickListener{
             val dialog = DialogRegisterUser(){
                 user -> okOnRegisterUser(user)   //Ya tengo el nuevo usuario capturado.
@@ -44,16 +47,18 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun registerLiveData() {
-        userViewModel.login.observe(this,
+
+        userViewModel.isLogginPreferencesLiveData.observe(this,
             {
-            login->
-                if (login!=null) {
-                    //aquí tengo que lanzar el activity ppal.
-                    val intent = Intent(this, MainActivity::class.java)
-                    startActivity(intent)
-                }else{
-                    Toast.makeText(this, "Error en el logueo", Toast.LENGTH_LONG).show()
-                }
+                isLoggin->
+                    if (isLoggin){
+                        val intent = Intent(this, MainActivity::class.java)
+                        startActivity(intent)
+                    }
+                    else
+                        Toast.makeText(this, "Error en el logueo", Toast.LENGTH_LONG).show()
+
+
             }
         )
 
@@ -66,4 +71,10 @@ class LoginActivity : AppCompatActivity() {
 
         })
     }
+
+
+
+
+
+
 }

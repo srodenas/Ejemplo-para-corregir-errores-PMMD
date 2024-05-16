@@ -1,10 +1,14 @@
 package com.example.srodenas.example_with_catalogs.ui.viewmodel.users
 
+import android.content.Context
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.srodenas.example_with_catalogs.R
 import com.example.srodenas.example_with_catalogs.domain.users.models.ListUsers
-import com.example.srodenas.example_with_catalogs.domain.users.models.Repository
+import com.example.srodenas.example_with_catalogs.domain.users.models.Profile
+import com.example.srodenas.example_with_catalogs.domain.users.models.RepositoryUsers
 import com.example.srodenas.example_with_catalogs.domain.users.models.User
 import com.example.srodenas.example_with_catalogs.domain.users.usecase.UseCaseLogin
 import com.example.srodenas.example_with_catalogs.domain.users.usecase.UseCaseRegisterLogin
@@ -14,22 +18,38 @@ import kotlinx.coroutines.withContext
 
 
 class UserViewModel (): ViewModel() {
-    val login = MutableLiveData<User?>()
-    val repository = Repository.repo  //Aquí tengo la instancia del repositorio
-    val useCaseLogin = UseCaseLogin(repository)
-    val useCaseRegisterLogin = UseCaseRegisterLogin(repository)
+    val repositoryUsers = RepositoryUsers.repo  //Aquí tengo la instancia del repositorio
+    val useCaseLogin = UseCaseLogin(repositoryUsers)
+    val useCaseRegisterLogin = UseCaseRegisterLogin(repositoryUsers)
     val register = MutableLiveData<Boolean>()
 
+    var isLogginPreferencesLiveData = MutableLiveData<Boolean>(false)
     var usersLiveData= MutableLiveData<MutableList<User>>()
     var posNewUserlLiveData = MutableLiveData<Int>()
     var posDeleteHotelLiveDate = MutableLiveData<Int>()
+    lateinit var context: Context
 
 
     /*
-1.- La consulta de acceso a datos asíncrona, la haremos en un hilo diferente al principal. Bien utilizar el de E/S.
-2.- Las actualizaciones, las haremos en el mismo hilo principal. Todo lo que tenga que ver con LiveData.
- */
+    Al pasarle el contexto, miraremos si tiene preferencias compartidas
+     */
+    fun setContext(_context : Context) {
+        context = _context
+        val isLogginPreferences = isUserLoogedInShared()//Comprobamos si tiene preferencias.
+        if (isLogginPreferences){
+            Profile.profile.setUser(getUser())  //Creamos el Perfil del usuario
+        }
+        isLogginPreferencesLiveData.value =  isLogginPreferences  //Notificamos a la UI
+    }
 
+
+
+
+    /*
+        Método que comprueba si el usuario se ha loguado correctamente.
+        1.- La consulta de acceso a datos asíncrona, la haremos en un hilo diferente al principal. Bien utilizar el de E/S.
+        2.- Las actualizaciones, las haremos en el mismo hilo principal. Todo lo que tenga que ver con LiveData.
+ */
     fun isLogin(email: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {//esta corrutina, se ejecuta en el hilo de E/S, no en el principal.
             val user: User? = null
@@ -40,13 +60,62 @@ class UserViewModel (): ViewModel() {
                 Según la documentación, es interesante que la actualización de los LiveData, se haga en el hilo principal.
                  */
             withContext(Dispatchers.Main) {//Con Dispatchers.Main, indicamos que el hilo se ejecute en el principal.
-                login.postValue(user)
+                if (user != null) {
+                    //TODO hay que guardar todos los campos del usuario.
+                    saveUserPreferents(user!!.id, user!!.name, user!!.email) //guardamos preferencias compartidas del usuario
+                    Profile.profile.setUser(getUser())  //Me creo el Perfil del usuario
+                    isLogginPreferencesLiveData.value = true  //notificamos a la ui
+                }
+                else
+                    isLogginPreferencesLiveData.value = false  //notificamos a la ui
             }
         }
     }
 
 
 
+    //Método que comprueba si existen las preferencias del usuario
+    private fun isUserLoogedInShared(): Boolean {
+        val sharedPreferences = context.getSharedPreferences(context.getString(R.string.pref_user_file), Context.MODE_PRIVATE)  //referenciamos nuestro fichero de pregerencias
+
+        val id = sharedPreferences.getInt(context.getString(R.string.pref_user_id),-1)  //recupero el id
+        val name = sharedPreferences.getString(context.getString(R.string.pref_user_name), null)
+        val email = sharedPreferences.getString(context.getString(R.string.pref_user_email), null)
+
+        return (id != -1 && name != null && email != null)
+    }
+
+
+
+    //Método que guarda las preferencias del usuario
+    private fun saveUserPreferents( id: Int, name: String, email: String) {
+        val sharedPreferences = context.getSharedPreferences(context.getString(R.string.pref_user_file), Context.MODE_PRIVATE)
+        val editorPreferences = sharedPreferences.edit()  //editamos el fichero de preferencias compartidas para modificarlo
+
+        editorPreferences.putInt(context.getString(R.string.pref_user_id), id)  //guardamos como entero el id del usuario
+        editorPreferences.putString(context.getString(R.string.pref_user_name), name)
+        editorPreferences.putString(context.getString(R.string.pref_user_email), email)
+        editorPreferences.apply()
+    }
+
+
+
+    //Método que recupera las preferencias del usuario
+    private fun getUser(): User {
+        val sharedPreferences = context.getSharedPreferences(context.getString(R.string.pref_user_file), Context.MODE_PRIVATE)  //referenciamos nuestro fichero de pregerencias
+
+        val id = sharedPreferences.getInt(context.getString(R.string.pref_user_id),0)  //recupero el id
+        val name = sharedPreferences.getString(context.getString(R.string.pref_user_name), context.getString(R.string.default_user_name))
+        val email = sharedPreferences.getString(context.getString(R.string.pref_user_email), context.getString(R.string.default_user_email))
+
+
+        //TODO añadir todos los campos a preferencias.
+        return User(id, name!!, email!!, "", "", "")
+    }
+
+
+
+    //Método que registra un usuario
     fun register(user : User){
         var isReg = false
 
@@ -77,7 +146,7 @@ class UserViewModel (): ViewModel() {
         }
     }
 
-    fun addUser(user:User){
+    /*fun addUser(user:User){
         viewModelScope.launch(Dispatchers.IO) {
             //todo newUserUseCase.setUser(user)
             var pos = 0
@@ -106,7 +175,7 @@ class UserViewModel (): ViewModel() {
                 posDeleteHotelLiveDate.value = pos
                 showUsers()
             }
-
+*/
 
             fun getUserForPosition(pos: Int) : User ?{
                //todo getHUserForPosUseCase.setPos(pos)
@@ -117,9 +186,7 @@ class UserViewModel (): ViewModel() {
 
         }
 
-    }
 
-}
 
 
 

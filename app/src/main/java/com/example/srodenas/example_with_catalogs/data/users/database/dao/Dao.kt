@@ -30,4 +30,8 @@ interface AlertDao {
 
     @Query("SELECT * FROM tblalerts WHERE id = :alertId")
     suspend fun getAlertById(alertId: Int): AlertEntity?
+
+    @Query("DELETE FROM tblalerts WHERE id = :alertId")
+    suspend fun deleteAlertById(alertId: Int)
+
 }

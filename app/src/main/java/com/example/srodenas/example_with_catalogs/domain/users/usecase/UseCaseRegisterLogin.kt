@@ -1,11 +1,11 @@
 package com.example.srodenas.example_with_catalogs.domain.users.usecase
 
-import com.example.srodenas.example_with_catalogs.domain.users.models.Repository
+import com.example.srodenas.example_with_catalogs.domain.users.models.RepositoryUsers
 import com.example.srodenas.example_with_catalogs.domain.users.models.User
 
-class UseCaseRegisterLogin (val repository: Repository){
+class UseCaseRegisterLogin (val repositoryUsers: RepositoryUsers){
 
     suspend fun register(user: User): Boolean {
-        return repository.registerEntity(user)
+        return repositoryUsers.registerEntity(user)
     }
 }

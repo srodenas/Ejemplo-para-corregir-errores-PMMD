@@ -6,7 +6,7 @@
     tools:context=".ui.views.fragments.users.UsersFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/my_recycler_view_alerts"
+        android:id="@+id/my_recycler_view_users"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="25dp"
@@ -14,13 +14,6 @@
 
         />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/btn_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:src="@drawable/baseline_person_add_24"
 
-        />
 
 </FrameLayout>

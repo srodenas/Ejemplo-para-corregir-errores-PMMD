@@ -5,10 +5,10 @@ import com.example.srodenas.example_with_catalogs.data.users.database.entities.U
 import com.example.srodenas.example_with_catalogs.domain.UserDataBaseSingleton
 
 
-class Repository  private constructor(private val userDao : UserDao){
+class RepositoryUsers  private constructor(private val userDao : UserDao){
     companion object{
-        val repo: Repository by lazy {
-            Repository(UserDataBaseSingleton.userDao)  //le pasamos el singleton. Aunque no será necesario.
+        val repo: RepositoryUsers by lazy {
+            RepositoryUsers(UserDataBaseSingleton.userDao)  //le pasamos el singleton. Aunque no será necesario.
         }
     }
 
