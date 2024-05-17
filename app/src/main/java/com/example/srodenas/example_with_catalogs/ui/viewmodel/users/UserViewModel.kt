@@ -31,15 +31,26 @@ class UserViewModel (): ViewModel() {
 
 
     /*
-    Al pasarle el contexto, miraremos si tiene preferencias compartidas
-     */
+        - Esta función, es la primera que ejecuta desde el Activity, para saltarse el paso del
+        logueo, en el caso de que ya se haya logueado y existan sus preferencias almacenadas.
+
+        - Si isLogginPreferences es falso, es porque no has iniciado nunca sesión, por tanto
+        se le debe de mostrar el Activity del Login para que pueda loguearse. Al ser falso, no
+        notifica al LiveData.
+
+        - Si isLogginPreferences es true, es porque se han encontrado las preferencias compartidas
+        de ese usuario y por tanto nos dice que ya se loguéo en una sesión anterior. En este caso,
+        se crea el Perfil del usuario logueado y notificamos al LiveData para que al observar un cambio
+        en dicho LiveData, actúe.
+         */
     fun setContext(_context : Context) {
         context = _context
         val isLogginPreferences = isUserLoogedInShared()//Comprobamos si tiene preferencias.
         if (isLogginPreferences){
             Profile.profile.setUser(getUser())  //Creamos el Perfil del usuario
+            isLogginPreferencesLiveData.value =  isLogginPreferences  //Notificamos a la UI
         }
-        isLogginPreferencesLiveData.value =  isLogginPreferences  //Notificamos a la UI
+
     }
 
 
