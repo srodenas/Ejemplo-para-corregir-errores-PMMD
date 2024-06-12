@@ -132,7 +132,7 @@ class UserViewModel (): ViewModel() {
 
         //Aquí es cuando invocamos a la data para su persistencia.
         viewModelScope.launch(Dispatchers.IO) {
-            isReg  = useCaseRegisterLogin.register(user)  //registramos el usaurio
+            isReg  = useCaseRegisterLogin.register(user)  //registramos el usuario
             withContext(Dispatchers.Main) {
                 register.value = isReg
             }
