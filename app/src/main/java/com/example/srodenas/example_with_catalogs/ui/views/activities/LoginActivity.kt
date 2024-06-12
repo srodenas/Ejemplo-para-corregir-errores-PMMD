@@ -23,7 +23,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
         registerLiveData()
         initEvent()
-        userViewModel.setContext(this)  //Pasamos el contexto del Activity al ViewModel. No es buena práctica del todo.
+        userViewModel.initContext(this)  //Pasamos el contexto del Activity al ViewModel. No es buena práctica del todo.
 
     }
 
@@ -58,7 +58,6 @@ class LoginActivity : AppCompatActivity() {
                     else
                         Toast.makeText(this, "Error en el logueo", Toast.LENGTH_LONG).show()
 
-
             }
         )
 
@@ -71,10 +70,5 @@ class LoginActivity : AppCompatActivity() {
 
         })
     }
-
-
-
-
-
 
 }

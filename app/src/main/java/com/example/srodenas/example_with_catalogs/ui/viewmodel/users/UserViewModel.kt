@@ -43,11 +43,11 @@ class UserViewModel (): ViewModel() {
         se crea el Perfil del usuario logueado y notificamos al LiveData para que al observar un cambio
         en dicho LiveData, actúe.
          */
-    fun setContext(_context : Context) {
+    fun initContext(_context : Context) {
         context = _context
         val isLogginPreferences = isUserLoogedInShared()//Comprobamos si tiene preferencias.
         if (isLogginPreferences){
-            Profile.profile.setUser(getUser())  //Creamos el Perfil del usuario
+            Profile.profile.user = getUser()  //Creamos el Perfil del usuario
             isLogginPreferencesLiveData.value =  isLogginPreferences  //Notificamos a la UI
         }
 
@@ -74,7 +74,7 @@ class UserViewModel (): ViewModel() {
                 if (user != null) {
                     //TODO hay que guardar todos los campos del usuario.
                     saveUserPreferents(user!!.id, user!!.name, user!!.email) //guardamos preferencias compartidas del usuario
-                    Profile.profile.setUser(getUser())  //Me creo el Perfil del usuario
+                    Profile.profile.user =getUser()  //Me creo el Perfil del usuario
                     isLogginPreferencesLiveData.value = true  //notificamos a la ui
                 }
                 else

@@ -11,8 +11,4 @@ class Profile private constructor(){
         }
     }
 
-
-    fun setUser (_user : User){
-        user = _user
-    }
 }
