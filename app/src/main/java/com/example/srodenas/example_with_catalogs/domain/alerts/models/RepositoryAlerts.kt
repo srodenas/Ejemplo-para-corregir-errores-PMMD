@@ -2,7 +2,7 @@ package com.example.srodenas.example_with_catalogs.domain.alerts.models
 
 import com.example.srodenas.example_with_catalogs.data.users.database.dao.AlertDao
 import com.example.srodenas.example_with_catalogs.data.users.database.entities.AlertEntity
-import com.example.srodenas.example_with_catalogs.domain.UserDataBaseSingleton
+import com.example.srodenas.example_with_catalogs.framework.UserDataBaseSingleton
 import com.example.srodenas.example_with_catalogs.domain.users.models.Profile
 
 class RepositoryAlerts private constructor(private val alertDao : AlertDao){

@@ -8,7 +8,9 @@ data class User (var id: Int,
                  var email:String,
                  var passw:String,
                  var phone:String,
-                 var imagen: String
+                 var imagen: String,
+                 var token: String = ""  //por defecto.
+
 ){
 
     //constructor primario

@@ -1,4 +1,4 @@
-package com.example.srodenas.example_with_catalogs.domain
+package com.example.srodenas.example_with_catalogs.framework
 
 import android.content.Context
 import androidx.room.Room

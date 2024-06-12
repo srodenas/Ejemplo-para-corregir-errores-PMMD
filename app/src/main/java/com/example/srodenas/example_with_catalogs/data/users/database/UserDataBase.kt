@@ -14,6 +14,8 @@ import com.example.srodenas.example_with_catalogs.data.users.database.entities.U
         AlertEntity::class],
     version = 1
 )
+
+
 @TypeConverters(DateConverter::class)
 abstract class UserDataBase : RoomDatabase(){
     abstract fun userDao(): UserDao
