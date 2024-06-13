@@ -17,6 +17,7 @@ import com.example.srodenas.example_with_catalogs.ui.views.fragments.users.dialo
 class LoginActivity : AppCompatActivity() {
     lateinit var binding : ActivityLoginBinding
     val userViewModel : UserViewModel by viewModels()  //viewModel del Usuario.
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityLoginBinding.inflate(layoutInflater)
@@ -29,7 +30,7 @@ class LoginActivity : AppCompatActivity() {
 
     private fun initEvent() {
         binding.btnLogin.setOnClickListener{
-            userViewModel.isLogin(binding.txtEmail.text.toString(), binding.txtPassword.text.toString())
+            userViewModel.isLoginApi(binding.txtEmail.text.toString(), binding.txtPassword.text.toString())
         }
 
         binding.btnRegistro.setOnClickListener{
@@ -43,7 +44,7 @@ class LoginActivity : AppCompatActivity() {
 
     //método que registra el usuario a patir del viewmodel.
     private fun okOnRegisterUser(user: User) {
-        userViewModel.register(user)
+        userViewModel.registerApi(user)
     }
 
     private fun registerLiveData() {
@@ -70,5 +71,8 @@ class LoginActivity : AppCompatActivity() {
 
         })
     }
+
+
+
 
 }

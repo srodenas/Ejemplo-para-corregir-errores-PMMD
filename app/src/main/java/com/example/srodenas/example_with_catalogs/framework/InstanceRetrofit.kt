@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 
 object InstanceRetrofit {
 
-    private const val URL_BASE_RETROFIT = "http://10.0.0.2.2/my_app_user"
+    private const val URL_BASE_RETROFIT = "http://10.0.2.2/my_app_user/endp"
 
     private val retrofit : Retrofit by lazy {
         Retrofit

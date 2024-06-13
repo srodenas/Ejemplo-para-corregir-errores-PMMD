@@ -11,7 +11,9 @@ import com.example.srodenas.example_with_catalogs.domain.users.models.Profile
 import com.example.srodenas.example_with_catalogs.domain.users.models.RepositoryUsers
 import com.example.srodenas.example_with_catalogs.domain.users.models.User
 import com.example.srodenas.example_with_catalogs.domain.users.usecase.UseCaseLogin
+import com.example.srodenas.example_with_catalogs.domain.users.usecase.UseCaseLoginApi
 import com.example.srodenas.example_with_catalogs.domain.users.usecase.UseCaseRegisterLogin
+import com.example.srodenas.example_with_catalogs.domain.users.usecase.UseCaseRegisterLoginApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -21,6 +23,10 @@ class UserViewModel (): ViewModel() {
     val repositoryUsers = RepositoryUsers.repo  //Aquí tengo la instancia del repositorio
     val useCaseLogin = UseCaseLogin(repositoryUsers)
     val useCaseRegisterLogin = UseCaseRegisterLogin(repositoryUsers)
+    val useCaseLoginApi = UseCaseLoginApi(repositoryUsers)
+    val useCaseRegisterApi = UseCaseRegisterLoginApi(repositoryUsers)
+
+
     val register = MutableLiveData<Boolean>()
 
     var isLogginPreferencesLiveData = MutableLiveData<Boolean>(false)
@@ -84,6 +90,25 @@ class UserViewModel (): ViewModel() {
     }
 
 
+    fun isLoginApi(email : String, password: String){
+        viewModelScope.launch (Dispatchers.IO){
+            val user: User? = null
+            if (!email.isEmpty() && !password.isEmpty()) {
+                val user = useCaseLoginApi.login(email, password) //invocamos al usuario.
+            }
+            withContext(Dispatchers.Main){
+                if (user != null) {
+                    //TODO hay que guardar todos los campos del usuario.
+                    saveUserPreferents(user!!.id, user!!.name, user!!.email) //guardamos preferencias compartidas del usuario
+                    Profile.profile.user = getUser()  //Me creo el Perfil del usuario
+                    isLogginPreferencesLiveData.value = true  //notificamos a la ui
+                }
+                else
+                    isLogginPreferencesLiveData.value = false
+            }
+        }
+    }
+
 
     //Método que comprueba si existen las preferencias del usuario
     private fun isUserLoogedInShared(): Boolean {
@@ -133,6 +158,18 @@ class UserViewModel (): ViewModel() {
         //Aquí es cuando invocamos a la data para su persistencia.
         viewModelScope.launch(Dispatchers.IO) {
             isReg  = useCaseRegisterLogin.register(user)  //registramos el usuario
+            withContext(Dispatchers.Main) {
+                register.value = isReg
+            }
+        }
+    }
+
+    fun registerApi(user : User){
+        var isReg = false
+
+        //Aquí es cuando invocamos a la data para su persistencia.
+        viewModelScope.launch(Dispatchers.IO) {
+            isReg  = useCaseRegisterApi.register(user)  //registramos el usuario
             withContext(Dispatchers.Main) {
                 register.value = isReg
             }

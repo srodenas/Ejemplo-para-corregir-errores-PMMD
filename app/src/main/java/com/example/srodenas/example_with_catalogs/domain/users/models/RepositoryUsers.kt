@@ -3,6 +3,7 @@ package com.example.srodenas.example_with_catalogs.domain.users.models
 import com.example.srodenas.example_with_catalogs.data.users.database.dao.UserDao
 import com.example.srodenas.example_with_catalogs.data.users.database.entities.UserEntity
 import com.example.srodenas.example_with_catalogs.data.users.network.models.request.RequestLoginUser
+import com.example.srodenas.example_with_catalogs.data.users.network.models.request.RequestRegister
 import com.example.srodenas.example_with_catalogs.data.users.network.service.UserApiService
 import com.example.srodenas.example_with_catalogs.framework.InstanceRetrofit
 import com.example.srodenas.example_with_catalogs.framework.UserDataBaseSingleton
@@ -37,12 +38,24 @@ class RepositoryUsers  private constructor(
     }
 
 
+    suspend fun registerEntity(user: User): Boolean{
+
+        val exitUser = isLoginEntity(user.email, user.passw)
+        if (exitUser == null){
+            val userEntity = UserEntity(user.id, user.name, user.email, user.passw, user.phone, user.imagen)
+            userDao.insertUser(userEntity)
+            return true
+        }else
+            return false
+
+    }
+
     /*
     Logueo en API
      */
     suspend fun isLoginApi(email: String, password: String) : User?{
         val userRequest = RequestLoginUser(email, password)
-        val result = service.getLogin(userRequest)
+        val result = service.login(userRequest)
         result
             .onSuccess {  //caso satisfactorio de la llamada al servicio
                resUser->
@@ -55,8 +68,6 @@ class RepositoryUsers  private constructor(
                         resUser.token
                     )
                     return user
-
-
             }
             .onFailure {
                 println("${it.message}") //caso de cualquier error, mostramos el Runtime
@@ -64,17 +75,27 @@ class RepositoryUsers  private constructor(
         return null
     }
 
-
-
-    suspend fun registerEntity(user: User): Boolean{
-
-        val exitUser = isLoginEntity(user.email, user.passw)
-        if (exitUser == null){
-            val userEntity = UserEntity(user.id, user.name, user.email, user.passw, user.phone, user.imagen)
-            userDao.insertUser(userEntity)
-            return true
-        }else
-            return false
-
+    /*
+    Se tiene en cuenta, que no se comprueba si ese usuario existe
+    Habrá que modificar la api, para que antes de registrar, lo haga.
+     */
+    suspend fun register(user : User) : Boolean{
+        val userRequest = RequestRegister(
+            user.name,
+            user.email,
+            user.passw,
+            user.phone
+        )
+        val result = service.register(userRequest)
+        result
+            .onSuccess {
+                return true
+             }
+            .onFailure {
+                println ("${it.message}")
+            }
+        return false  //posiblemente, usuario ya registrado.
     }
+
+
 }
